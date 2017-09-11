@@ -1,0 +1,152 @@
+<ng-form id="new_request" class="request-form form-label form-css-label" name="requestForm" ng-if="formName">
+  <fieldset class="form-field" ng-if="!user && nameField">
+    <input type="text" name="request_name" id="request_name" class="SanomatGrabApp-Regular" pattern=".*\S.*" ng-model="request.name" required>
+    <label class="SanomatGrabApp-LightItalic" for="request_name">Name</label>
+  </fieldset>
+  <fieldset class="form-field" ng-if="!user && mobileField">
+    <input type="tel" name="request_phone" id="request_phone" class="SanomatGrabApp-Regular" pattern=".*\S.*" ng-model="request.phone" required>
+    <label class="SanomatGrabApp-LightItalic" for="request_phone">Phone</label>
+  </fieldset>
+  <fieldset class="form-field" ng-if="!user && emailField">
+    <input type="text" name="request_email" id="request_email" class="SanomatGrabApp-Regular" pattern=".*\S.*" ng-model="request.email" required>
+    <label class="SanomatGrabApp-LightItalic" for="request_email">Email</label>
+  </fieldset>
+  <fieldset class="form-field" ng-if="!user && bookingField">
+    <input type="text" name="request_booking_id" id="request_booking_id" class="SanomatGrabApp-Regular" pattern=".*\S.*" ng-model="request.bookingCode" required>
+    <label class="SanomatGrabApp-LightItalic" for="request_booking_id">Indicate date/time, pickup/destination, or booking ID</label>
+  </fieldset>
+  <fieldset class="form-field" ng-if="user && bookingField" style="z-index: 999;">
+    <div ng-if="totalBookings == 0">No trip history</div>
+    <div class="booking-dropdown-select" ng-if="showSelectDropdown && totalBookings != 0" ng-click="showBookingDropdown()">Select a trip</div>
+    <booking-dropdown id="request_booking_id" bookings="user.bookings" ng-if="!showSelectDropdown && totalBookings != 0"></booking-dropdown>
+  </fieldset>
+  <fieldset class="form-field" ng-if="mapIssueField">
+    <span class="label SanomatGrabApp-LightItalic">Report issue on<br /></span>
+    <map-issue-selection id="request_map_issue" mapissues="mapissues"></map-issue-selection>
+  </fieldset>
+  <fieldset class="form-field" ng-if="peerField">
+    <span class="label SanomatGrabApp-LightItalic">I am the<br /></span>
+    <peer-selection id="request_peer" peers="peers"></peer-selection>
+  </fieldset>
+  <fieldset class="form-field" ng-if="firstChargeField">
+    <!-- Cannot be number input, see below link -->
+    <!-- http://stackoverflow.com/questions/21177489/selectionstart-selectionend-on-input-type-number-no-longer-allowed-in-chrome -->
+    <input type="number" name="request_first_charge" id="request_first_charge" class="SanomatGrabApp-Regular" pattern=".*\S.*" ng-model="request.firstCharge" required>
+    <label class="SanomatGrabApp-LightItalic" for="request_first_charge">1st Amount</label>
+  </fieldset>
+  <fieldset class="form-field" ng-if="secondChargeField">
+    <!-- Cannot be number input, see below link -->
+    <!-- http://stackoverflow.com/questions/21177489/selectionstart-selectionend-on-input-type-number-no-longer-allowed-in-chrome -->
+    <input type="number" name="request_second_charge" id="request_second_charge" class="SanomatGrabApp-Regular" pattern=".*\S.*" ng-model="request.secondCharge" required>
+    <label class="SanomatGrabApp-LightItalic" for="request_second_charge">2nd Amount</label>
+  </fieldset>
+  <fieldset class="form-field" ng-if="promoCodeField">
+    <input type="text" name="request_promo_code" id="request_promo_code" class="SanomatGrabApp-Regular" pattern=".*\S.*" ng-model="request.promoCode" required>
+    <label class="SanomatGrabApp-LightItalic" for="request_promo_code">Promo Code</label>
+  </fieldset>
+  <fieldset class="form-field" ng-if="amountField">
+    <!-- Cannot be number input, see below link -->
+    <!-- http://stackoverflow.com/questions/21177489/selectionstart-selectionend-on-input-type-number-no-longer-allowed-in-chrome -->
+    <input type="number" name="request_promo_code_amount" id="request_promo_code_amount" class="SanomatGrabApp-Regular" pattern=".*\S.*" ng-model="request.amount" required>
+    <label class="SanomatGrabApp-LightItalic" for="request_promo_code_amount">Amount</label>
+  </fieldset>
+  <fieldset class="form-field" ng-if="contactField">
+    <input type="tel" name="request_contact" id="request_contact" class="SanomatGrabApp-Regular" pattern=".*\S.*" ng-model="request.contact" required>
+    <label class="SanomatGrabApp-LightItalic" for="request_contact">Contact</label>
+  </fieldset>
+  <fieldset class="form-field" ng-if="lastFourField">
+    <input type="tel" name="request_last_four" id="request_last_four" class="SanomatGrabApp-Regular" pattern=".*\S.*" ng-model="request.lastFour" required>
+    <label class="SanomatGrabApp-LightItalic" for="request_last_four">Last 4 digits of credit card</label>
+  </fieldset>
+  <fieldset class="form-field" ng-if="dateField">
+    <input type="date" ng-if="!oldBrowser" name="requestDate" id="request_date" ng-model="request.date" required>
+    <input type="text" ng-if="oldBrowser" name="request_text_date" id="request_text_date" class="SanomatGrabApp-Regular" ng-model="request.textdate" required>
+    <label ng-if="oldBrowser" class="SanomatGrabApp-LightItalic" for="request_text_date">Date</label>
+    <small ng-if="oldBrowser" class='form-text text-muted input-hint'>Date format: DD/MM/YYYY</small>
+    <!-- There is no date label since it is inserted with Javascript to add a date floating label -->
+  </fieldset>
+  <fieldset class="form-field" ng-if="timeField">
+    <input type="time" ng-if="!oldBrowser" name="requestTime" name="time" id="request_time" ng-model="request.time" required>
+    <input type="text" ng-if="oldBrowser" name="request_text_time" id="request_text_time" class="SanomatGrabApp-Regular" ng-model="request.texttime" required>
+    <label ng-if="oldBrowser" class="SanomatGrabApp-LightItalic" for="request_text_time">Time</label>
+    <small ng-if="oldBrowser" class='form-text text-muted input-hint'>Time format: HH:MM AM/PM</small>
+    <!-- There is no date label since it is inserted with Javascript to add a time floating label -->
+  </fieldset>
+  <fieldset class="form-field" ng-if="locationField">
+    <input type="text" name="request_location" id="request_location" class="SanomatGrabApp-Regular" pattern=".*\S.*" ng-model="request.location" required>
+    <label class="SanomatGrabApp-LightItalic" for="request_location">Location</label>
+  </fieldset>
+  <fieldset class="form-field" ng-if="injuriesField">
+    <input type="text" name="request_injuries" id="request_injuries" value="&nbsp;" class="SanomatGrabApp-Regular" pattern=".*\S.*" ng-model="request.injuries" required>
+    <label class="SanomatGrabApp-LightItalic" for="request_injuries">Injuries (specify N/A if no injuries)</label>
+  </fieldset>
+  <fieldset class="form-field" ng-if="descriptionField">
+    <input type="text" name="request_description" id="request_description" class="SanomatGrabApp-Regular" pattern=".*\S.*" ng-model="request.description" required>
+    <label class="SanomatGrabApp-LightItalic" for="request_description">Description</label>
+  </fieldset>
+  <fieldset class="form-field photos" ng-if="attachmentField">
+    <input id="fileInput" accept="image/*" name="photos" type="file" multiple onchange="angular.element(this).scope().addAttachment(window.event)">
+    <button class="ng-file-input" role="button" onclick="document.getElementById('fileInput').click();" ng-disabled="!uploadsCompleted">UPLOAD PHOTOS</button>
+    <ul class="ulThumbnail">
+      <li class="liThumbnail" data-ng-repeat="attachment in attachments">
+        <img ng-src="{{ attachment.source }}" class="imgThumbnail"/>
+        <img src="/hc/theme_assets/514860/115000074987/spinner.gif" class="spinner" ng-hide="attachment.loaded">
+        <a data-ng-click="removeAttachment(attachment)"><i class="fa fa-remove"></i></a>
+      </li>
+    </ul>
+    <div role="alert" class="alert alert-upload-danger alert-dismissable fade show">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      <div>
+        You cannot upload more than 5 photos.
+      </div>
+    </div>
+  </fieldset>
+  <fieldset class="form-field" ng-if="merchantNameField">
+    <input type="text" name="request_merchantName" id="request_merchantName" class="SanomatGrabApp-Regular" pattern=".*\S.*" ng-model="request.merchantName" required>
+    <label class="SanomatGrabApp-LightItalic" for="request_merchantName">Merchant's Name</label>
+  </fieldset>
+  <fieldset class="form-field" ng-if="rewardDescriptionField">
+    <input type="text" name="request_rewardDescription" id="request_rewardDescription" class="SanomatGrabApp-Regular" pattern=".*\S.*" ng-model="request.rewardDescription" required>
+    <label class="SanomatGrabApp-LightItalic" for="request_rewardDescription">Reward Description</label>
+  </fieldset>
+  <fieldset class="form-field" ng-if="issueField">
+    <input type="text" name="request_issue" id="request_issue" class="SanomatGrabApp-Regular" pattern=".*\S.*" ng-model="request.issue" required>
+    <label class="SanomatGrabApp-LightItalic" for="request_issue">Issue</label>
+  </fieldset>
+  <fieldset class="form-field">
+    <button type="button" id="btnSubmitLoad" class="button-large" data-loading-text="<i class='fa fa-spinner fa-spin '></i> Processing request" ng-hide="true" ng-click="submit(request)" ng-disabled="requestForm.$invalid || !uploadsCompleted || showSelectDropdown">SUBMIT</button>
+    <input type="submit" id="formSubmit" ng-click="sendGA('Submit'); submit(request)" value="SUBMIT" ng-disabled="requestForm.$invalid || !uploadsCompleted || showSelectDropdown">
+  </fieldset>
+  <div ng-if="callButton" class="call-button" ng-cloak>
+    <a role="button" class="button-outline" ng-if="(user.isPlatinum == 'false' || user.isPlatinum == false)" ng-click="sendGA('Regular')" href="tel:+6566550005">
+      <i class="fa fa-phone"></i>&nbsp;CALL US
+    </a>
+    <!-- The phone number will change for platinum users. -->
+    <a role="button" class="button-outline" ng-if="(user.isPlatinum == 'true' || user.isPlatinum == true)" ng-click="sendGA('Platinum')" href="tel:+6566103888">
+      <i class="fa fa-phone"></i>&nbsp;CALL US
+    </a>
+  </div>
+  <div ng-if="callButton" class="web-call-button" ng-cloak>
+    <!-- Show call number on Web Browser -->
+    <a role="button" class="button-outline browser-button" ng-if="!isMobileApp" ng-click="sendGA('Regular'); setPhoneNo($event, '(65) 6655 0005');" href="#">
+      <span id="showPhoneNo">&nbsp;&nbsp;<i class="fa fa-phone"></i>&nbsp;CALL US&nbsp;&nbsp;</span>
+    </a>
+  </div>
+  <!-- Alerts -->
+  <div ng-show="submitted" role="alert" class="alert alert-success alert-dismissable">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    Got it. A Grabber will reach out to you shortly.
+  </div>
+  <div ng-show="zendeskError" role="alert" class="alert alert-danger alert-dismissable fade show">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    <div>
+      An error occurred. Please retry.
+    </div>
+  </div>
+</ng-form>
