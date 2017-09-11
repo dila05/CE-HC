@@ -1,4 +1,4 @@
-# CE-HC
+# Help Centre
 
 Hi CIAs,
 
