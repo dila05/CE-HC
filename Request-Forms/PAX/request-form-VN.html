@@ -127,7 +127,8 @@
     <a role="button" class="button-outline" ng-if="(user.isPlatinum == 'true' || user.isPlatinum == true)" ng-click="sendGA('Platinum')" href="tel:+842871067106">
       <i class="fa fa-phone"></i>&nbsp;Gọi đến Grab
     </a>
-  </div>
+  </div>
+
   <div ng-if="callButton" class="web-call-button" ng-cloak>
     <!-- Show call number on Web Browser -->
     <a role="button" class="button-outline browser-button" ng-if="!isMobileApp" ng-click="sendGA('Regular'); setPhoneNo($event, '(842) 7108 7108');" href="#">
@@ -149,4 +150,4 @@
       Có lỗi xảy ra. Vui lòng thử lại.
     </div>
   </div>
-</ng-form>
+</ng-form>
