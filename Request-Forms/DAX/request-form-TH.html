@@ -1,0 +1,154 @@
+
+<ng-form id="new_request" class="request-form form-label form-css-label" name="requestForm" ng-if="formName">
+  <fieldset class="form-field" ng-if="!user && nameField">
+    <input type="text" name="request_name" id="request_name" class="SanomatGrabApp-Regular" pattern=".*\S.*" ng-model="request.name" required>
+    <label class="SanomatGrabApp-LightItalic" for="request_name">ชื่อ</label>
+  </fieldset>
+  <fieldset class="form-field" ng-if="!user && mobileField">
+    <input type="tel" name="request_phone" id="request_phone" class="SanomatGrabApp-Regular" pattern=".*\S.*" ng-model="request.phone" required>
+    <label class="SanomatGrabApp-LightItalic" for="request_phone">เบอร์โทรศัพท์</label>
+  </fieldset>
+  <fieldset class="form-field" ng-if="!user && emailField">
+    <input type="text" name="request_email" id="request_email" class="SanomatGrabApp-Regular" pattern=".*\S.*" ng-model="request.email" required>
+    <label class="SanomatGrabApp-LightItalic" for="request_email">อีเมล</label>
+  </fieldset>
+  <fieldset class="form-field" ng-if="!user && bookingField">
+    <input type="text" name="request_booking_id" id="request_booking_id" class="SanomatGrabApp-Regular" pattern=".*\S.*" ng-model="request.bookingCode" required>
+    <label class="SanomatGrabApp-LightItalic" for="request_booking_id">วันที่/เวลา, จุดรับ/จุดส่ง, หรือ booking ID</label>
+  </fieldset>
+  <fieldset class="form-field" ng-if="user && bookingField" style="z-index: 999;">
+    <div ng-if="totalBookings == 0">ไม่พบเที่ยวการเดินทาง</div>
+    <div class="booking-dropdown-select" ng-if="showSelectDropdown && totalBookings != 0" ng-click="showBookingDropdown()">โปรดเลือกเที่ยวการเดินทาง</div>
+    <booking-dropdown id="request_booking_id" bookings="user.bookings" ng-if="!showSelectDropdown && totalBookings != 0"></booking-dropdown>
+  </fieldset>
+  <fieldset class="form-field" ng-if="nricField">
+      <input type="text" name="request_nric" id="request_nric" class="SanomatGrabApp-Regular" pattern=".*\S.*" ng-model="request.nric" required>
+      <label class="SanomatGrabApp-LightItalic" for="request_nric">หมายเลขบัตรประชาชน</label>
+  </fieldset>
+  <fieldset class="form-field" ng-if="vehicleNoField">
+      <input type="text" name="request_vehicle_no" id="request_vehicle_no" class="SanomatGrabApp-Regular" pattern=".*\S.*" ng-model="request.vehicleno" required>
+      <label class="SanomatGrabApp-LightItalic" for="request_vehicle_no">หมายเลขทะเบียนรถ</label>
+  </fieldset>
+  <fieldset class="form-field" ng-if="firstChargeField">
+    <!-- Cannot be number input, see below link -->
+    <!-- http://stackoverflow.com/questions/21177489/selectionstart-selectionend-on-input-type-number-no-longer-allowed-in-chrome -->
+    <input type="number" name="request_first_charge" id="request_first_charge" class="SanomatGrabApp-Regular" pattern=".*\S.*" ng-model="request.firstCharge" required>
+    <label class="SanomatGrabApp-LightItalic" for="request_first_charge">จำนวนค่าโดยสารครั้งที่ 1</label>
+  </fieldset>
+  <fieldset class="form-field" ng-if="secondChargeField">
+    <!-- Cannot be number input, see below link -->
+    <!-- http://stackoverflow.com/questions/21177489/selectionstart-selectionend-on-input-type-number-no-longer-allowed-in-chrome -->
+    <input type="number" name="request_second_charge" id="request_second_charge" class="SanomatGrabApp-Regular" pattern=".*\S.*" ng-model="request.secondCharge" required>
+    <label class="SanomatGrabApp-LightItalic" for="request_second_charge">จำนวนค่าโดยสารครั้งที่ 2</label>
+  </fieldset>
+  <fieldset class="form-field" ng-if="promoCodeField">
+    <input type="text" name="request_promo_code" id="request_promo_code" class="SanomatGrabApp-Regular" pattern=".*\S.*" ng-model="request.promoCode" required>
+    <label class="SanomatGrabApp-LightItalic" for="request_promo_code">รหัสโปรโมชัน</label>
+  </fieldset>
+  <fieldset class="form-field" ng-if="amountField">
+    <!-- Cannot be number input, see below link -->
+    <!-- http://stackoverflow.com/questions/21177489/selectionstart-selectionend-on-input-type-number-no-longer-allowed-in-chrome -->
+    <input type="number" name="request_promo_code_amount" id="request_promo_code_amount" class="SanomatGrabApp-Regular" pattern=".*\S.*" ng-model="request.amount" required>
+    <label class="SanomatGrabApp-LightItalic" for="request_promo_code_amount">จำนวน</label>
+  </fieldset>
+  <fieldset class="form-field" ng-if="contactField">
+    <input type="tel" name="request_contact" id="request_contact" class="SanomatGrabApp-Regular" pattern=".*\S.*" ng-model="request.contact" required>
+    <label class="SanomatGrabApp-LightItalic" for="request_contact">เบอร์ติดต่อ</label>
+  </fieldset>
+  <fieldset class="form-field" ng-if="lastFourField">
+    <input type="tel" name="request_last_four" id="request_last_four" class="SanomatGrabApp-Regular" pattern=".*\S.*" ng-model="request.lastFour" required>
+    <label class="SanomatGrabApp-LightItalic" for="request_last_four">เลข 4 ตัวท้ายของหมายเลขบัตรเดบิต/เครดิต</label>
+  </fieldset>
+  <fieldset class="form-field" ng-if="dateField">
+    <input type="date" ng-if="!oldBrowser" name="requestDate" id="request_date" ng-model="request.date" required>
+    <input type="text" ng-if="oldBrowser" name="request_text_date" id="request_text_date" class="SanomatGrabApp-Regular" ng-model="request.textdate" required>
+    <label ng-if="oldBrowser" class="SanomatGrabApp-LightItalic" for="request_text_date">Date</label>
+    <small ng-if="oldBrowser" class='form-text text-muted input-hint'>วันที่: วัน/เดือน/ปี</small>
+    <!-- There is no date label since it is inserted with Javascript to add a date floating label -->
+  </fieldset>
+  <fieldset class="form-field" ng-if="timeField">
+    <input type="time" ng-if="!oldBrowser" name="requestTime" name="time" id="request_time" ng-model="request.time" required>
+    <input type="text" ng-if="oldBrowser" name="request_text_time" id="request_text_time" class="SanomatGrabApp-Regular" ng-model="request.texttime" required>
+    <label ng-if="oldBrowser" class="SanomatGrabApp-LightItalic" for="request_text_time">Time</label>
+    <small ng-if="oldBrowser" class='form-text text-muted input-hint'>เวลา: ชั่วโมง:นาที AM/PM</small>
+    <!-- There is no date label since it is inserted with Javascript to add a time floating label -->
+  </fieldset>
+  <fieldset class="form-field" ng-if="locationField">
+    <input type="text" name="request_location" id="request_location" class="SanomatGrabApp-Regular" pattern=".*\S.*" ng-model="request.location" required>
+    <label class="SanomatGrabApp-LightItalic" for="request_location">สถานที่</label>
+  </fieldset>
+  <fieldset class="form-field" ng-if="injuriesField">
+    <input type="text" name="request_injuries" id="request_injuries" value="&nbsp;" class="SanomatGrabApp-Regular" pattern=".*\S.*" ng-model="request.injuries" required>
+    <label class="SanomatGrabApp-LightItalic" for="request_injuries">อาการบาดเจ็บ (ระบุอาการที่เกี่ยวข้อง)</label>
+  </fieldset>
+  <fieldset class="form-field" ng-if="!user && topUpCreditIssuePaxNameField">
+    <input type="text" name="request_topUpCreditIssuePaxName" id="request_topUpCreditIssuePaxName" class="SanomatGrabApp-Regular" pattern=".*\S.*" ng-model="request.topUpCreditIssuePaxName" required>
+    <label class="SanomatGrabApp-LightItalic" for="request_topUpCreditIssuePaxName">ชื่อผู้โดยสาร</label>
+  </fieldset>
+  <fieldset class="form-field" ng-if="!user && topUpCreditIssueAmtField">
+    <input type="number" name="request_topUpCreditIssueAmt" id="request_topUpCreditIssueAmt" class="SanomatGrabApp-Regular" pattern=".*\S.*" ng-model="request.topUpCreditIssueAmt" required>
+    <label class="SanomatGrabApp-LightItalic" for="request_topUpCreditIssueAmt">จำนวนเงินที่เติม</label>
+  </fieldset>
+  <fieldset class="form-field" ng-if="!user && topUpCreditIssueReasonField">
+    <select name="request_topUpCreditIssueReason" id="request_topUpCreditIssueReason" class="SanomatGrabApp-Regular" ng-model="request.topUpCreditIssueReason" ng-options="topupcreditissue.issue as topupcreditissue.issue for topupcreditissue in topupcreditissues" required>
+        <option value="">โปรดเลือกเหตุผล</option>
+    </select>
+  </fieldset>
+  <fieldset class="form-field" ng-if="user && topUpCreditIssueReasonField" style="z-index: 999;">
+    <div class="booking-dropdown-select" ng-if="showtopUpCreditIssueSelectDropdown" ng-click="showtopUpCreditIssueDropdown()">โปรดเลือกเหตุผล</div>
+    <topup-credit-issue-dropdown id="request_topUpCreditIssueReason" topupcreditissues="topupcreditissues" ng-if="!showtopUpCreditIssueSelectDropdown"></topup-credit-issue-dropdown>
+  </fieldset>
+  <fieldset class="form-field" ng-if="descriptionField">
+    <input type="text" name="request_description" id="request_description" class="SanomatGrabApp-Regular" pattern=".*\S.*" ng-model="request.description" required>
+    <label class="SanomatGrabApp-LightItalic" for="request_description">คำอธิบาย</label>
+  </fieldset>
+  <fieldset class="form-field photos" ng-if="attachmentField">
+    <input id="fileInput" accept="image/*" name="photos" type="file" multiple onchange="angular.element(this).scope().addAttachment(window.event)">
+    <button class="ng-file-input" role="button" onclick="document.getElementById('fileInput').click();">อัปโหลดรูปภาพ</button>
+    <ul class="ulThumbnail">
+      <li class="liThumbnail" data-ng-repeat="attachment in attachments">
+        <img ng-src="{{ attachment.source }}" class="imgThumbnail"/>
+        <img src="/hc/theme_assets/514860/115000074987/spinner.gif" class="spinner" ng-hide="attachment.loaded">
+        <a data-ng-click="removeAttachment(attachment)"><i class="fa fa-remove"></i></a>
+      </li>
+    </ul>
+    <div role="alert" class="alert alert-upload-danger alert-dismissable fade show">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      <div>
+        ท่านสามารถใส่ภาพได้เพียง 5 ภาพเท่านั้น
+      </div>
+    </div>
+  </fieldset>
+  <fieldset class="form-field" ng-if="showSubmit">
+    <button type="button" id="btnSubmitLoad" class="button-large" data-loading-text="<i class='fa fa-spinner fa-spin '></i> กำลังดำเนินการ" ng-hide="true" ng-click="submit(request)" ng-disabled="requestForm.$invalid || !uploadsCompleted || showSelectDropdown">ส่งแบบฟอร์ม</button>
+    <input type="submit" id="formSubmit" ng-click="sendGA('Submit'); submit(request)" value="ส่งแบบฟอร์ม" ng-disabled="requestForm.$invalid || !uploadsCompleted || showSelectDropdown">
+</fieldset>
+  <div ng-if="callButton" class="call-button" ng-cloak>
+    <a role="button" class="button-outline" ng-if="(isMobileApp)" ng-click="sendGA('Regular')" href="tel:+6620212500">
+      <i class="fa fa-phone"></i>&nbsp;ติดต่อเรา
+    </a>
+  </div>
+  <div ng-if="callButton" class="web-call-button" ng-cloak>
+    <!-- Show call number on Web Browser -->
+    <a role="button" class="button-outline browser-button" ng-if="(!isMobileApp)" ng-click="sendGA('Regular'); setPhoneNo($event, '(66) 2021 2500');" href="#">
+      <span id="showPhoneNo">&nbsp;&nbsp;<i class="fa fa-phone"></i>&nbsp;ติดต่อเรา&nbsp;&nbsp;</span>
+    </a>
+  </div>
+  <!-- Alerts -->
+  <div ng-show="submitted" role="alert" class="alert alert-success alert-dismissable">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    ความเห็นของท่านมีความหมายสำหรับเรา เจ้าหน้าที่จะติดต่อท่านผ่านอีเมลเร็วๆนี้
+  </div>
+  <div ng-show="zendeskError" role="alert" class="alert alert-danger alert-dismissable fade show">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    <div>
+      เกิดข้อผิดพลาดโปรดลองอีกครั้ง
+    </div>
+  </div>
+</ng-form>
